@@ -1,0 +1,43 @@
+# Cấu hình mặc định, áp dụng cho tất cả các profile nếu không bị ghi đè
+server:
+  port: 8080
+
+spring:
+  application:
+    name: demo-app
+
+# Một thuộc tính tùy chỉnh để demo @Value
+app:
+  welcome-message: "Welcome from the Default Profile!"
+  # Nhóm thuộc tính tùy chỉnh để demo @ConfigurationProperties
+  info:
+    name: "My Awesome App"
+    version: "1.0.0"
+    author: "Default Author"
+
+---
+# Cấu hình này chỉ được kích hoạt khi profile 'dev' được chọn
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+server:
+  port: 8081 # Ghi đè cổng cho môi trường dev
+
+app:
+  welcome-message: "Hey Developer! Welcome from the DEV Profile!"
+  info:
+    author: "Dev Team"
+
+---
+# Cấu hình này chỉ được kích hoạt khi profile 'prod' được chọn
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+app:
+  welcome-message: "Welcome from the PRODUCTION Profile!"
+  info:
+    author: "Production Support"
