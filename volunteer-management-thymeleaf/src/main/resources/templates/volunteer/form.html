@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}">Thêm/Sửa Tình nguyện viên</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="/css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <nav th:replace="~{fragments/layout :: navigation}"></nav>
+
+    <div class="container mt-4">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header">
+              <h5>
+                <i class="fas fa-user text-primary"></i>
+                <span th:text="${title}">Thêm/Sửa Tình nguyện viên</span>
+              </h5>
+            </div>
+            <div class="card-body">
+              <form
+                th:action="@{/volunteers/add}"
+                th:object="${volunteer}"
+                method="post"
+              >
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="fullName" class="form-label"
+                      >Họ tên <span class="text-danger">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="fullName"
+                      th:field="*{fullName}"
+                      th:placeholder="'Nhập họ tên đầy đủ'"
+                      th:maxlength="50"
+                      th:minlength="3"
+                      th:required="true"
+                      th:pattern="'[A-Za-zÀ-ỹ\\s]+'"
+                      th:title="'Chỉ cho phép chữ cái và dấu cách'"
+                    />
+                    <div
+                      th:if="${#fields.hasErrors('fullName')}"
+                      class="text-danger"
+                    >
+                      <small th:errors="*{fullName}"></small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label"
+                      >Email <span class="text-danger">*</span></label
+                    >
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      th:field="*{email}"
+                      th:placeholder="'example@email.com'"
+                      th:required="true"
+                      th:title="'Nhập email hợp lệ'"
+                    />
+                    <div
+                      th:if="${#fields.hasErrors('email')}"
+                      class="text-danger"
+                    >
+                      <small th:errors="*{email}"></small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="phone" class="form-label">Số điện thoại</label>
+                    <input
+                      type="tel"
+                      class="form-control"
+                      id="phone"
+                      th:field="*{phone}"
+                      th:placeholder="'0123456789'"
+                      th:pattern="'[0-9]{10,11}'"
+                      th:title="'Nhập số điện thoại 10-11 chữ số'"
+                    />
+                    <div
+                      th:if="${#fields.hasErrors('phone')}"
+                      class="text-danger"
+                    >
+                      <small th:errors="*{phone}"></small>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label for="joinDate" class="form-label"
+                      >Ngày tham gia <span class="text-danger">*</span></label
+                    >
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="joinDate"
+                      th:field="*{joinDate}"
+                      th:required="true"
+                      th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                      th:title="'Chọn ngày tham gia (không được trong tương lai)'"
+                    />
+                    <div
+                      th:if="${#fields.hasErrors('joinDate')}"
+                      class="text-danger"
+                    >
+                      <small th:errors="*{joinDate}"></small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <a
+                    th:replace="~{fragments/layout :: back-button('/volunteers')}"
+                  ></a>
+                  <button
+                    th:replace="~{fragments/layout :: submit-button('Lưu tình nguyện viên')}"
+                  ></button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <script th:replace="~{fragments/layout :: scripts}"></script>
+  </body>
+</html>
