@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header :: header-css}"></head>
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container">
+    <h1 class="mb-4">Danh sách sách trong thư viện</h1>
+
+    <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Tên sách</th>
+            <th>Tác giả</th>
+            <th>Số lượng còn</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.id}"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.quantity}"></td>
+            <td>
+                <div sec:authorize="isAuthenticated()">
+                    <a th:if="${book.quantity > 0}" class="btn btn-sm btn-success"
+                       th:href="@{/books/borrow/{id}(id=${book.id})}"
+                       onclick="return confirm('Bạn có chắc muốn mượn sách này?')">Mượn</a>
+                    <span th:if="${book.quantity <= 0}" class="text-muted">Hết sách</span>
+                </div>
+                <div sec:authorize="!isAuthenticated()">
+                    <small class="text-muted">Đăng nhập để mượn</small>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header :: header-css}"></head>
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container">
+    <h1 class="mb-4">Lịch sử mượn sách của tôi</h1>
+
+    <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>Tên sách</th>
+            <th>Ngày mượn</th>
+            <th>Ngày trả</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="loan : ${loans}">
+            <td th:text="${loan.book.title}"></td>
+            <td th:text="${loan.loanDate}"></td>
+            <td th:text="${loan.returnDate}"></td>
+            <td>
+                <span th:if="${loan.status == 'BORROWED'}" class="badge bg-warning">Đang mượn</span>
+                <span th:if="${loan.status == 'RETURNED'}" class="badge bg-success">Đã trả</span>
+            </td>
+            <td>
+                <a th:if="${loan.status == 'BORROWED'}" class="btn btn-sm btn-info"
+                   th:href="@{/loans/return/{id}(id=${loan.id})}"
+                   onclick="return confirm('Bạn có chắc muốn trả sách này?')">Trả sách</a>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(loans)}">
+            <td colspan="5" class="text-center">Bạn chưa mượn cuốn sách nào.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

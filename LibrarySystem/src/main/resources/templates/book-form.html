@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-css}"></head>
+<body>
+<div th:replace="~{fragments/header :: navbar}"></div>
+
+<div class="container mt-4">
+    <h1 th:text="${pageTitle}"></h1>
+    <hr>
+    <form th:action="@{/manage/books/save}" th:object="${bookDto}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="mb-3">
+            <label for="title" class="form-label">Tên sách:</label>
+            <input type="text" th:field="*{title}" id="title" class="form-control"/>
+            <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></p>
+        </div>
+        <div class="mb-3">
+            <label for="author" class="form-label">Tác giả:</label>
+            <input type="text" th:field="*{author}" id="author" class="form-control"/>
+            <p th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="text-danger"></p>
+        </div>
+        <div class="mb-3">
+            <label for="quantity" class="form-label">Số lượng:</label>
+            <input type="number" th:field="*{quantity}" id="quantity" class="form-control"/>
+            <p th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" class="text-danger"></p>
+        </div>
+        <button type="submit" class="btn btn-success">Lưu</button>
+        <a th:href="@{/manage/books}" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+</body>
+</html>
