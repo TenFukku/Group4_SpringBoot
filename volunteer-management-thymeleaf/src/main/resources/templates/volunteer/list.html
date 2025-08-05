@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}">Danh sách Tình nguyện viên</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="/css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <i class="fas fa-heart"></i> Quản lý Tình nguyện viên
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/volunteers">Tình nguyện viên</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/campaigns">Chiến dịch</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/skills">Kỹ năng</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+              <i class="fas fa-users text-primary"></i> Danh sách Tình nguyện
+              viên
+            </h1>
+            <a href="/volunteers/add" class="btn btn-primary">
+              <i class="fas fa-plus"></i> Thêm tình nguyện viên mới
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div
+        th:if="${success}"
+        class="alert alert-success alert-custom"
+        role="alert"
+      >
+        <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5><i class="fas fa-search"></i> Tìm kiếm</h5>
+            </div>
+            <div class="card-body">
+              <form th:action="@{/volunteers}" method="get" class="row g-3">
+                <div class="col-md-4">
+                  <label for="name" class="form-label"
+                    >Tên tình nguyện viên</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    th:value="${param.name}"
+                    placeholder="Nhập tên để tìm kiếm"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="email" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    th:value="${param.email}"
+                    placeholder="Nhập email để tìm kiếm"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="status" class="form-label">Trạng thái</label>
+                  <select class="form-select" id="status" name="status">
+                    <option value="">Tất cả</option>
+                    <option
+                      value="active"
+                      th:selected="${param.status == 'active'}"
+                    >
+                      Có kỹ năng
+                    </option>
+                    <option
+                      value="inactive"
+                      th:selected="${param.status == 'inactive'}"
+                    >
+                      Chưa có kỹ năng
+                    </option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Tìm kiếm
+                  </button>
+                  <a th:href="@{/volunteers}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Xóa bộ lọc
+                  </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5>
+                <i class="fas fa-list"></i> Tổng số:
+                <span th:text="${#lists.size(volunteers)}">0</span> tình nguyện
+                viên
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                  <thead class="table-primary">
+                    <tr>
+                      <th>ID</th>
+                      <th>Họ tên</th>
+                      <th>Email</th>
+                      <th>Số điện thoại</th>
+                      <th>Ngày tham gia</th>
+                      <th>Số kỹ năng</th>
+                      <th>Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      th:each="volunteer, iterStat : ${volunteers}"
+                      th:class="${#lists.size(volunteer.skillLevels) > 2 ? 'table-success' : (#lists.size(volunteer.skillLevels) == 0 ? 'table-warning' : '')}"
+                      th:title="${'Volunteer #' + iterStat.count + ' of ' + iterStat.size + ' (Index: ' + iterStat.index + ')'}"
+                    >
+                      <td th:text="${volunteer.id}">1</td>
+                      <td th:text="${volunteer.fullName}">Tên mẫu</td>
+                      <td th:text="${volunteer.email}">email@example.com</td>
+                      <td th:text="${volunteer.phone}">0123456789</td>
+                      <td
+                        th:text="${#dates.format(volunteer.joinDate, 'dd/MM/yyyy')}"
+                      >
+                        01/01/2024
+                      </td>
+                      <td>
+                        <span
+                          th:class="${#lists.size(volunteer.skillLevels) > 2 ? 'badge bg-success' : (#lists.size(volunteer.skillLevels) == 0 ? 'badge bg-warning' : 'badge bg-info')}"
+                          th:text="${#lists.size(volunteer.skillLevels)}"
+                          >0</span
+                        >
+                      </td>
+                      <td>
+                        <a
+                          th:href="@{/volunteers/{id}(id=${volunteer.id})}"
+                          class="btn btn-sm btn-info"
+                          th:title="'Xem chi tiết ' + ${volunteer.fullName}"
+                        >
+                          <i class="fas fa-eye"></i> Xem
+                        </a>
+                        <a
+                          th:href="@{/volunteers/{id}/edit(id=${volunteer.id})}"
+                          class="btn btn-sm btn-primary"
+                          th:disabled="${#lists.size(volunteer.skillLevels) == 0}"
+                          th:title="${#lists.size(volunteer.skillLevels) == 0 ? 'Không thể sửa - chưa có kỹ năng' : 'Sửa thông tin'}"
+                        >
+                          <i class="fas fa-edit"></i> Sửa
+                        </a>
+                        <a
+                          th:href="@{/volunteers/{id}/delete(id=${volunteer.id})}"
+                          class="btn btn-sm btn-danger"
+                          th:attr="onclick=|return confirm('Bạn có chắc muốn xóa ${volunteer.fullName}?')|"
+                        >
+                          <i class="fas fa-trash"></i> Xóa
+                        </a>
+                      </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(volunteers)}">
+                      <td colspan="7" class="text-center text-muted">
+                        <i class="fas fa-info-circle"></i> Chưa có tình nguyện
+                        viên nào được thêm
+                      </td>
+                    </tr>
+                    <tr th:unless="${#lists.isEmpty(volunteers)}">
+                      <td colspan="7" class="text-center text-success">
+                        <i class="fas fa-check-circle"></i> Hiển thị
+                        <span th:text="${#lists.size(volunteers)}">0</span> tình
+                        nguyện viên
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+      <div class="container">
+        <p class="mb-0">
+          &copy; 2024 Hệ thống Quản lý Tình nguyện viên. Được phát triển với
+          Spring Boot & Thymeleaf.
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

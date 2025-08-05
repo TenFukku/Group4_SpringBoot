@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}">Danh sách Chiến dịch</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="/css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <i class="fas fa-heart"></i> Quản lý Tình nguyện viên
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/volunteers">Tình nguyện viên</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/campaigns">Chiến dịch</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/skills">Kỹ năng</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+              <i class="fas fa-calendar-alt text-success"></i> Danh sách Chiến
+              dịch
+            </h1>
+            <a href="/campaigns/add" class="btn btn-success">
+              <i class="fas fa-plus"></i> Tạo chiến dịch mới
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5><i class="fas fa-search"></i> Tìm kiếm</h5>
+            </div>
+            <div class="card-body">
+              <form th:action="@{/campaigns}" method="get" class="row g-3">
+                <div class="col-md-4">
+                  <label for="name" class="form-label">Tên chiến dịch</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    th:value="${param.name}"
+                    placeholder="Nhập tên để tìm kiếm"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="location" class="form-label">Địa điểm</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="location"
+                    name="location"
+                    th:value="${param.location}"
+                    placeholder="Nhập địa điểm để tìm kiếm"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="status" class="form-label">Trạng thái</label>
+                  <select class="form-select" id="status" name="status">
+                    <option value="">Tất cả</option>
+                    <option
+                      value="active"
+                      th:selected="${param.status == 'active'}"
+                    >
+                      Đang diễn ra
+                    </option>
+                    <option
+                      value="upcoming"
+                      th:selected="${param.status == 'upcoming'}"
+                    >
+                      Sắp diễn ra
+                    </option>
+                    <option
+                      value="ended"
+                      th:selected="${param.status == 'ended'}"
+                    >
+                      Đã kết thúc
+                    </option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-success">
+                    <i class="fas fa-search"></i> Tìm kiếm
+                  </button>
+                  <a th:href="@{/campaigns}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Xóa bộ lọc
+                  </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        th:if="${success}"
+        class="alert alert-success alert-custom"
+        role="alert"
+      >
+        <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5>
+                <i class="fas fa-list"></i> Tổng số:
+                <span th:text="${#lists.size(campaigns)}">0</span> chiến dịch
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                  <thead class="table-success">
+                    <tr>
+                      <th>ID</th>
+                      <th>Tên chiến dịch</th>
+                      <th>Ngày bắt đầu</th>
+                      <th>Ngày kết thúc</th>
+                      <th>Địa điểm</th>
+                      <th>Số tình nguyện viên</th>
+                      <th>Trạng thái</th>
+                      <th>Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      th:each="campaign, iterStat : ${campaigns}"
+                      th:classappend="${#dates.createNow().after(campaign.endDate) ? 'table-secondary' : ''}"
+                      th:title="${'Campaign #' + iterStat.count + ' of ' + iterStat.size + ' (Index: ' + iterStat.index + ')'}"
+                    >
+                      <td th:text="${campaign.id}">1</td>
+                      <td th:text="${campaign.name}">Tên chiến dịch</td>
+                      <td
+                        th:text="${#dates.format(campaign.startDate, 'dd/MM/yyyy')}"
+                      >
+                        01/01/2024
+                      </td>
+                      <td
+                        th:text="${#dates.format(campaign.endDate, 'dd/MM/yyyy')}"
+                      >
+                        31/12/2024
+                      </td>
+                      <td th:text="${campaign.location}">Địa điểm</td>
+                      <td th:text="${#lists.size(campaign.participationLogs)}">
+                        0
+                      </td>
+                      <td>
+                        <span
+                          th:if="${#dates.createNow().after(campaign.startDate) and #dates.createNow().before(campaign.endDate)}"
+                          class="badge bg-success"
+                          >Đang diễn ra</span
+                        >
+                        <span
+                          th:if="${#dates.createNow().before(campaign.startDate)}"
+                          class="badge bg-warning"
+                          >Sắp diễn ra</span
+                        >
+                        <span
+                          th:if="${#dates.createNow().after(campaign.endDate)}"
+                          class="badge bg-secondary"
+                          >Đã kết thúc</span
+                        >
+                      </td>
+                      <td>
+                        <a
+                          th:href="@{/campaigns/{id}(id=${campaign.id})}"
+                          class="btn btn-sm btn-info"
+                          th:attr="data-campaign-id=${campaign.id}, data-campaign-name=${campaign.name}"
+                        >
+                          <i class="fas fa-eye"></i> Xem
+                        </a>
+                        <a
+                          th:href="@{/campaigns/{id}/edit(id=${campaign.id})}"
+                          class="btn btn-sm btn-primary"
+                          th:disabled="${#dates.createNow().after(campaign.endDate)}"
+                          th:title="${#dates.createNow().after(campaign.endDate) ? 'Không thể sửa chiến dịch đã kết thúc' : 'Sửa chiến dịch'}"
+                        >
+                          <i class="fas fa-edit"></i> Sửa
+                        </a>
+                        <a
+                          th:href="@{/campaigns/{id}/delete(id=${campaign.id})}"
+                          class="btn btn-sm btn-danger"
+                          th:attr="onclick=|return confirm('Bạn có chắc muốn xóa ${campaign.name}?')|"
+                        >
+                          <i class="fas fa-trash"></i> Xóa
+                        </a>
+                      </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(campaigns)}">
+                      <td colspan="8" class="text-center text-muted">
+                        <i class="fas fa-info-circle"></i> Chưa có chiến dịch
+                        nào được tạo
+                      </td>
+                    </tr>
+                    <tr th:unless="${#lists.isEmpty(campaigns)}">
+                      <td colspan="8" class="text-center text-success">
+                        <i class="fas fa-check-circle"></i> Hiển thị
+                        <span th:text="${#lists.size(campaigns)}">0</span> chiến
+                        dịch
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+      <div class="container">
+        <p class="mb-0">
+          &copy; 2024 Hệ thống Quản lý Tình nguyện viên. Được phát triển với
+          Spring Boot & Thymeleaf.
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

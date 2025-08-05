@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}">Trang chủ - Quản lý Tình nguyện viên</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="/css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <nav th:replace="~{fragments/layout :: navigation}"></nav>
+
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-12">
+          <h1 class="text-center mb-4">
+            <i class="fas fa-home text-primary"></i>
+            Thống kê tổng quan
+          </h1>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+          <div
+            class="card text-center bg-primary text-white"
+            th:classappend="${totalVolunteers > 10 ? 'border-success' : ''}"
+          >
+            <div class="card-body">
+              <i class="fas fa-users fa-3x mb-3"></i>
+              <h5 class="card-title">Tình nguyện viên</h5>
+              <h2 class="card-text" th:text="${totalVolunteers}">0</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div
+            class="card text-center bg-success text-white"
+            th:classappend="${activeCampaigns > 0 ? 'border-warning' : ''}"
+          >
+            <div class="card-body">
+              <i class="fas fa-calendar-alt fa-3x mb-3"></i>
+              <h5 class="card-title">Chiến dịch</h5>
+              <h2 class="card-text" th:text="${totalCampaigns}">0</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div
+            class="card text-center bg-warning text-white"
+            th:classappend="${totalSkills > 10 ? 'border-info' : ''}"
+          >
+            <div class="card-body">
+              <i class="fas fa-tools fa-3x mb-3"></i>
+              <h5 class="card-title">Kỹ năng</h5>
+              <h2 class="card-text" th:text="${totalSkills}">0</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <div
+            class="card text-center bg-info text-white"
+            th:classappend="${activeCampaigns == 0 ? 'border-secondary' : ''}"
+          >
+            <div class="card-body">
+              <i class="fas fa-play-circle fa-3x mb-3"></i>
+              <h5 class="card-title">Chiến dịch đang diễn ra</h5>
+              <h2 class="card-text" th:text="${activeCampaigns}">0</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5><i class="fas fa-bolt"></i> Thao tác nhanh</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-3 mb-2">
+                  <a href="/volunteers/add" class="btn btn-primary w-100">
+                    <i class="fas fa-plus"></i> Thêm tình nguyện viên
+                  </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                  <a href="/campaigns/add" class="btn btn-success w-100">
+                    <i class="fas fa-plus"></i> Tạo chiến dịch mới
+                  </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                  <a href="/skills/add" class="btn btn-warning w-100">
+                    <i class="fas fa-plus"></i> Thêm kỹ năng
+                  </a>
+                </div>
+                <div class="col-md-3 mb-2">
+                  <a
+                    href="/h2-console"
+                    class="btn btn-secondary w-100"
+                    target="_blank"
+                  >
+                    <i class="fas fa-database"></i> H2 Console
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <script th:replace="~{fragments/layout :: scripts}"></script>
+  </body>
+</html>
