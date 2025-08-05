@@ -1,0 +1,12 @@
+### 1. TAO MOT USER MOI
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+    "name": "Test from VSCode",
+    "email": "vscode@example.com"
+}
+
+###
+### 2. LAY DANH SACH TAT CA USER
+GET http://localhost:8080/api/users

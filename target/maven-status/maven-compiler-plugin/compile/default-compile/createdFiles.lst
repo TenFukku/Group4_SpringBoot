@@ -1,0 +1,5 @@
+com/example/usermanagementdemo/UserController.class
+com/example/usermanagementdemo/UserManagementDemoApplication.class
+com/example/usermanagementdemo/UserRepository.class
+com/example/usermanagementdemo/User.class
+com/example/usermanagementdemo/UserService.class
